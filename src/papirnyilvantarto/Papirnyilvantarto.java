@@ -6,6 +6,10 @@
 package papirnyilvantarto;
 
 import com.sun.glass.events.KeyEvent;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
 import javax.swing.event.TableModelEvent;
 
 /**
@@ -22,19 +26,43 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
     public Papirnyilvantarto() {
         initComponents();
         ab = new DB();
+        setIcon();
         ab.keszlet_be(tblKeszlet, lekerdez());
+        idozito.start();
     }
     
     private String lekerdez() {
         String a = "";
-        if (!txtKereso.getText().trim().isEmpty())
-            a = a + " tarhely LIKE '%" + txtKereso.getText().trim() + "%' AND ";
-        a = a + " nev LIKE '%" + txtKereso.getText().trim() + "%' AND ";
-        a = a + " gramm LIKE '%" + txtKereso.getText().trim() + "%' AND ";
-        a = a + " meret LIKE '%" + txtKereso.getText().trim() + "%' AND ";
-        a = a + " szalirany LIKE '%" + txtKereso.getText().trim() + "%' AND ";
-        a = a + " mennyiseg LIKE '%" + txtKereso.getText().trim() + "%' ";
-        return "SELECT * FROM leltar WHERE " + a + " ORDER BY tarhely;";
+        if (!txtTarhelyKereso.getText().trim().isEmpty())
+            a = a + " tarhely LIKE '%" + txtTarhelyKereso.getText().trim() + "%' AND ";
+        a = a + " tarhely LIKE '%" + txtTarhelyKereso.getText().trim() + "%' AND ";
+        
+        String b = "";
+        if (!txtMegnevezesKereso.getText().trim().isEmpty())
+            b = b + " nev LIKE '%" + txtMegnevezesKereso.getText().trim() + "%' AND ";
+        b = b + " nev LIKE '%" + txtMegnevezesKereso.getText().trim() + "%' AND ";
+        
+        String c = "";
+        if (!txtGrammKereso.getText().trim().isEmpty())
+            c = c + " gramm LIKE '%" + txtGrammKereso.getText().trim() + "%' AND ";
+        c = c + " gramm LIKE '%" + txtGrammKereso.getText().trim() + "%' AND ";
+        
+        String d = "";
+        if (!txtMeretKereso.getText().trim().isEmpty())
+            d = d + " meret LIKE '%" + txtMeretKereso.getText().trim() + "%' AND ";
+        d = d + " meret LIKE '%" + txtMeretKereso.getText().trim() + "%' AND ";
+        
+        String e = "";
+        if (!txtSzaliranyKereso.getText().trim().isEmpty())
+            e = e + " szalirany LIKE '%" + txtSzaliranyKereso.getText().trim() + "%' AND ";
+        e = e + " szalirany LIKE '%" + txtSzaliranyKereso.getText().trim() + "%' AND ";
+        
+        String f = "";
+        if (!txtMennyisegKereso.getText().trim().isEmpty())
+            f = f + " mennyiseg LIKE '%" + txtMennyisegKereso.getText().trim() + "%' AND ";
+        f = f + " mennyiseg LIKE '%" + txtMennyisegKereso.getText().trim() + "%' ";
+        
+        return "SELECT * FROM leltar WHERE " + a + b + c + d + e + f + " ORDER BY tarhely;";
     }
     
     private void tablabol() {
@@ -76,6 +104,13 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
         }
     }
     
+    private Timer idozito = new Timer(60000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            ab.keszlet_be(tblKeszlet, lekerdez());
+            }
+        });
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -87,7 +122,6 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         tblKeszlet = new javax.swing.JTable();
-        btnKereses = new javax.swing.JButton();
         txtTarhely = new javax.swing.JTextField();
         txtMegnevezes = new javax.swing.JTextField();
         txtGramm = new javax.swing.JTextField();
@@ -102,12 +136,19 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         btnUj = new javax.swing.JButton();
         btnModosit = new javax.swing.JButton();
-        txtKereso = new javax.swing.JTextField();
+        txtTarhelyKereso = new javax.swing.JTextField();
         btnSzuresTorles = new javax.swing.JButton();
         btnTorol = new javax.swing.JButton();
         btnMennyisegModosit = new javax.swing.JButton();
+        txtGrammKereso = new javax.swing.JTextField();
+        txtMeretKereso = new javax.swing.JTextField();
+        txtSzaliranyKereso = new javax.swing.JTextField();
+        txtMennyisegKereso = new javax.swing.JTextField();
+        txtMegnevezesKereso = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Papírnyilvántartó");
+        setIconImages(null);
 
         tblKeszlet.setAutoCreateRowSorter(true);
         tblKeszlet.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -120,10 +161,10 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true
+                false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -134,7 +175,6 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblKeszlet.setColumnSelectionAllowed(true);
         tblKeszlet.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tblKeszlet.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblKeszlet.getTableHeader().setReorderingAllowed(false);
@@ -149,7 +189,6 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(tblKeszlet);
-        tblKeszlet.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (tblKeszlet.getColumnModel().getColumnCount() > 0) {
             tblKeszlet.getColumnModel().getColumn(0).setMinWidth(0);
             tblKeszlet.getColumnModel().getColumn(0).setPreferredWidth(0);
@@ -159,49 +198,34 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
             tblKeszlet.getColumnModel().getColumn(3).setPreferredWidth(50);
             tblKeszlet.getColumnModel().getColumn(4).setPreferredWidth(40);
             tblKeszlet.getColumnModel().getColumn(5).setPreferredWidth(40);
-            tblKeszlet.getColumnModel().getColumn(6).setCellEditor(null);
         }
 
-        btnKereses.setBackground(new java.awt.Color(0, 204, 0));
-        btnKereses.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btnKereses.setText("Keresés");
-        btnKereses.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnKeresesActionPerformed(evt);
-            }
-        });
-
-        jLabel1.setDisplayedMnemonic('T');
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setLabelFor(txtTarhely);
         jLabel1.setText("Tárhely:");
 
-        jLabel2.setDisplayedMnemonic('Z');
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setLabelFor(txtMegnevezes);
         jLabel2.setText("Megnevezés:");
         jLabel2.setToolTipText("");
 
-        jLabel3.setDisplayedMnemonic('G');
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setLabelFor(txtGramm);
         jLabel3.setText("Gramm:");
 
-        jLabel4.setDisplayedMnemonic('R');
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setLabelFor(txtMeret);
         jLabel4.setText("Méret:");
 
-        jLabel5.setDisplayedMnemonic('S');
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setLabelFor(txtSzalirany);
         jLabel5.setText("Szálirány:");
 
-        jLabel6.setDisplayedMnemonic('M');
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setLabelFor(txtMennyiseg);
         jLabel6.setText("Mennyiség:");
 
+        btnUj.setIcon(new javax.swing.ImageIcon(getClass().getResource("/papirnyilvantarto/uj.png"))); // NOI18N
         btnUj.setText("Új");
         btnUj.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -209,6 +233,7 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
             }
         });
 
+        btnModosit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/papirnyilvantarto/modosit.png"))); // NOI18N
         btnModosit.setText("Módosít");
         btnModosit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -216,10 +241,10 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
             }
         });
 
-        txtKereso.setToolTipText("Keresés");
-        txtKereso.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtKeresoActionPerformed(evt);
+        txtTarhelyKereso.setToolTipText("Keresés");
+        txtTarhelyKereso.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTarhelyKeresoKeyReleased(evt);
             }
         });
 
@@ -232,6 +257,7 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
             }
         });
 
+        btnTorol.setIcon(new javax.swing.ImageIcon(getClass().getResource("/papirnyilvantarto/torol.png"))); // NOI18N
         btnTorol.setText("Törlés");
         btnTorol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -239,10 +265,46 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
             }
         });
 
+        btnMennyisegModosit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/papirnyilvantarto/mennyiseg_modosit.png"))); // NOI18N
         btnMennyisegModosit.setText("Mennyiség módosít");
         btnMennyisegModosit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnMennyisegModositActionPerformed(evt);
+            }
+        });
+
+        txtGrammKereso.setToolTipText("Keresés");
+        txtGrammKereso.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtGrammKeresoKeyReleased(evt);
+            }
+        });
+
+        txtMeretKereso.setToolTipText("Keresés");
+        txtMeretKereso.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtMeretKeresoKeyReleased(evt);
+            }
+        });
+
+        txtSzaliranyKereso.setToolTipText("Keresés");
+        txtSzaliranyKereso.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSzaliranyKeresoKeyReleased(evt);
+            }
+        });
+
+        txtMennyisegKereso.setToolTipText("Keresés");
+        txtMennyisegKereso.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtMennyisegKeresoKeyReleased(evt);
+            }
+        });
+
+        txtMegnevezesKereso.setToolTipText("Keresés");
+        txtMegnevezesKereso.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtMegnevezesKeresoKeyReleased(evt);
             }
         });
 
@@ -252,103 +314,117 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtTarhely)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtMegnevezes, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                            .addComponent(txtMegnevezes)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtGramm)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtMeret)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtSzalirany))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtMennyiseg)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)))
-                    .addComponent(txtKereso))
-                .addGap(18, 18, 18)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtTarhelyKereso, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtMegnevezesKereso, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtGrammKereso)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtMeretKereso, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtSzaliranyKereso, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtMennyisegKereso, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnUj, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnModosit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnTorol)
-                    .addComponent(btnMennyisegModosit)
-                    .addComponent(btnSzuresTorles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnKereses, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btnModosit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnSzuresTorles, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnUj, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnTorol)))
+                    .addComponent(btnMennyisegModosit, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
 
-        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnKereses, btnModosit, btnSzuresTorles, btnTorol, btnUj});
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnMennyisegModosit, btnModosit, btnSzuresTorles, btnTorol, btnUj});
 
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtKereso, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnKereses, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnSzuresTorles)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnMennyisegModosit)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnTorol)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addComponent(btnSzuresTorles, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtTarhelyKereso, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtGrammKereso, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtMeretKereso, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtSzaliranyKereso, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtMegnevezesKereso, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtMennyisegKereso, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 532, Short.MAX_VALUE)
+                        .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
                             .addComponent(jLabel5)
-                            .addComponent(jLabel6)
-                            .addComponent(btnUj))
+                            .addComponent(jLabel6))
+                        .addGap(8, 8, 8))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnMennyisegModosit)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtTarhely, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtMegnevezes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtGramm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtMeret, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtSzalirany, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtMennyiseg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(btnModosit, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap(29, Short.MAX_VALUE))
+                        .addComponent(btnTorol)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnUj)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnModosit)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtTarhely, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtMegnevezes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtGramm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtMeret, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtSzalirany, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtMennyiseg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(29, 29, 29))
         );
 
-        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnKereses, btnSzuresTorles});
+        layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnMennyisegModosit, btnModosit, btnSzuresTorles, btnTorol, btnUj, txtMennyisegKereso});
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnKeresesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeresesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnKeresesActionPerformed
-
-    private void txtKeresoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtKeresoActionPerformed
-        ab.keszlet_be(tblKeszlet, lekerdez());
-    }//GEN-LAST:event_txtKeresoActionPerformed
-
     private void btnSzuresTorlesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSzuresTorlesActionPerformed
-        txtKereso.setText("");
+        txtTarhelyKereso.setText("");
+        txtMegnevezesKereso.setText("");
+        txtGrammKereso.setText("");
+        txtMeretKereso.setText("");
+        txtSzaliranyKereso.setText("");
+        txtMennyisegKereso.setText("");
         ab.keszlet_be(tblKeszlet, lekerdez());
     }//GEN-LAST:event_btnSzuresTorlesActionPerformed
 
@@ -365,14 +441,6 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
     }//GEN-LAST:event_tblKeszletKeyReleased
 
     private void btnUjActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUjActionPerformed
-        /*txtTarhely.setText("");
-        txtMegnevezes.setText("");
-        txtGramm.setText("");
-        txtMeret.setText("");
-        txtSzalirany.setText("");
-        txtMennyiseg.setText("");
-        txtTarhely.requestFocus();
-        txtTarhely.selectAll();*/
         int n = ab.hozzaad(txtTarhely.getText(),
                            txtMegnevezes.getText(),
                            txtGramm.getText(),
@@ -419,6 +487,30 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnMennyisegModositActionPerformed
 
+    private void txtTarhelyKeresoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTarhelyKeresoKeyReleased
+        ab.keszlet_be(tblKeszlet, lekerdez());
+    }//GEN-LAST:event_txtTarhelyKeresoKeyReleased
+
+    private void txtGrammKeresoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGrammKeresoKeyReleased
+        ab.keszlet_be(tblKeszlet, lekerdez());
+    }//GEN-LAST:event_txtGrammKeresoKeyReleased
+
+    private void txtMeretKeresoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMeretKeresoKeyReleased
+        ab.keszlet_be(tblKeszlet, lekerdez());
+    }//GEN-LAST:event_txtMeretKeresoKeyReleased
+
+    private void txtSzaliranyKeresoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSzaliranyKeresoKeyReleased
+        ab.keszlet_be(tblKeszlet, lekerdez());
+    }//GEN-LAST:event_txtSzaliranyKeresoKeyReleased
+
+    private void txtMennyisegKeresoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMennyisegKeresoKeyReleased
+        ab.keszlet_be(tblKeszlet, lekerdez());
+    }//GEN-LAST:event_txtMennyisegKeresoKeyReleased
+
+    private void txtMegnevezesKeresoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMegnevezesKeresoKeyReleased
+        ab.keszlet_be(tblKeszlet, lekerdez());
+    }//GEN-LAST:event_txtMegnevezesKeresoKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -455,7 +547,6 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnKereses;
     private javax.swing.JButton btnMennyisegModosit;
     private javax.swing.JButton btnModosit;
     private javax.swing.JButton btnSzuresTorles;
@@ -470,11 +561,20 @@ public class Papirnyilvantarto extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblKeszlet;
     private javax.swing.JTextField txtGramm;
-    private javax.swing.JTextField txtKereso;
+    private javax.swing.JTextField txtGrammKereso;
     private javax.swing.JTextField txtMegnevezes;
+    private javax.swing.JTextField txtMegnevezesKereso;
     private javax.swing.JTextField txtMennyiseg;
+    private javax.swing.JTextField txtMennyisegKereso;
     private javax.swing.JTextField txtMeret;
+    private javax.swing.JTextField txtMeretKereso;
     private javax.swing.JTextField txtSzalirany;
+    private javax.swing.JTextField txtSzaliranyKereso;
     private javax.swing.JTextField txtTarhely;
+    private javax.swing.JTextField txtTarhelyKereso;
     // End of variables declaration//GEN-END:variables
+
+    private void setIcon() {
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("programikon.png")));
+    }
 }
